@@ -32,15 +32,13 @@ try {
       }
       requests.set(ip, record);
       if (record.count > max) {
-        return res
-          .status(429)
-          .json(
-            options.message || {
-              success: false,
-              error:
-                "Too many requests from this IP, please try again after 15 minutes.",
-            },
-          );
+        return res.status(429).json(
+          options.message || {
+            success: false,
+            error:
+              "Too many requests from this IP, please try again after 15 minutes.",
+          },
+        );
       }
       next();
     };

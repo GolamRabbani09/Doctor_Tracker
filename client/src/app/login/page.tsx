@@ -1,23 +1,25 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
-import { HeartPulse, Lock, Mail, Loader2, ArrowRight } from 'lucide-react';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { HeartPulse, Lock, Mail, Loader2, ArrowRight } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const { login, user, loading: authLoading } = useAuth();
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
 
   useEffect(() => {
     if (!authLoading && user) {
-      router.replace('/dashboard');
+      router.replace("/dashboard");
     }
   }, [user, authLoading, router]);
 
@@ -25,15 +27,15 @@ export default function LoginPage() {
     const newErrors: { email?: string; password?: string } = {};
 
     if (!email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Please provide a valid email';
+      newErrors.email = "Please provide a valid email";
     }
 
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     setErrors(newErrors);
@@ -47,16 +49,16 @@ export default function LoginPage() {
     try {
       setSubmitting(true);
       await login(email, password);
-      toast.success('Signed in successfully');
-      router.push('/dashboard');
+      toast.success("Signed in successfully");
+      router.push("/dashboard");
     } catch (err: unknown) {
-      console.error('Login error:', err);
+      console.error("Login error:", err);
       const msg =
-        (err as { response?: { data?: { message?: string; error?: string } } })?.response
-          ?.data?.message ||
-        (err as { response?: { data?: { message?: string; error?: string } } })?.response
-          ?.data?.error ||
-        'Invalid email or password';
+        (err as { response?: { data?: { message?: string; error?: string } } })
+          ?.response?.data?.message ||
+        (err as { response?: { data?: { message?: string; error?: string } } })
+          ?.response?.data?.error ||
+        "Invalid email or password";
       toast.error(msg);
     } finally {
       setSubmitting(false);
@@ -64,8 +66,8 @@ export default function LoginPage() {
   };
 
   const handleFillDemo = () => {
-    setEmail('admin@doctor-tracker.com');
-    setPassword('password123');
+    setEmail("admin@doctor-tracker.com");
+    setPassword("password123");
     setErrors({});
   };
 
@@ -88,7 +90,9 @@ export default function LoginPage() {
         {/* Login Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border border-slate-100">
           <div className="mb-6">
-            <h2 className="text-xl font-bold text-gray-900">Sign in to your account</h2>
+            <h2 className="text-xl font-bold text-gray-900">
+              Sign in to your account
+            </h2>
             <p className="text-sm text-gray-500 mt-1">
               Enter your credentials to access the admin portal
             </p>
@@ -109,13 +113,14 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    if (errors.email) setErrors({ ...errors, email: undefined });
+                    if (errors.email)
+                      setErrors({ ...errors, email: undefined });
                   }}
                   placeholder="admin@doctor-tracker.com"
                   className={`block w-full rounded-lg pl-10 pr-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 border ${
                     errors.email
-                      ? 'border-red-500 ring-1 ring-red-500'
-                      : 'border-gray-300'
+                      ? "border-red-500 ring-1 ring-red-500"
+                      : "border-gray-300"
                   } focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors`}
                 />
               </div>
@@ -140,13 +145,14 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
-                    if (errors.password) setErrors({ ...errors, password: undefined });
+                    if (errors.password)
+                      setErrors({ ...errors, password: undefined });
                   }}
                   placeholder="••••••••"
                   className={`block w-full rounded-lg pl-10 pr-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 border ${
                     errors.password
-                      ? 'border-red-500 ring-1 ring-red-500'
-                      : 'border-gray-300'
+                      ? "border-red-500 ring-1 ring-red-500"
+                      : "border-gray-300"
                   } focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors`}
                 />
               </div>
@@ -190,11 +196,13 @@ export default function LoginPage() {
               </button>
             </div>
             <p className="mt-1">
-              <span className="text-slate-500">Email:</span>{' '}
-              <code className="text-slate-800 font-mono">admin@doctor-tracker.com</code>
+              <span className="text-slate-500">Email:</span>{" "}
+              <code className="text-slate-800 font-mono">
+                admin@doctor-tracker.com
+              </code>
             </p>
             <p className="mt-0.5">
-              <span className="text-slate-500">Password:</span>{' '}
+              <span className="text-slate-500">Password:</span>{" "}
               <code className="text-slate-800 font-mono">password123</code>
             </p>
           </div>
@@ -202,7 +210,8 @@ export default function LoginPage() {
 
         {/* Security Notice */}
         <p className="text-center text-xs text-slate-400 mt-6">
-          Doctor Tracker &bull; HIPAA Compliant Architecture &bull; All Rights Reserved
+          Doctor Tracker &bull; HIPAA Compliant Architecture &bull; All Rights
+          Reserved
         </p>
       </div>
     </div>
