@@ -1,11 +1,13 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { AuthProvider } from '@/context/AuthContext';
-import { Toaster } from 'react-hot-toast';
+import type { Metadata } from "next";
+// @ts-expect-error Next.js loads this stylesheet as a side effect.
+import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: 'Doctor Tracker - Medical & Healthcare Admin Panel',
-  description: 'Enterprise dashboard for managing doctors, patients, and healthcare metrics.',
+  title: "Doctor Tracker - Medical & Healthcare Admin Panel",
+  description:
+    "Enterprise dashboard for managing doctors, patients, and healthcare metrics.",
 };
 
 export default function RootLayout({
@@ -23,22 +25,22 @@ export default function RootLayout({
             toastOptions={{
               duration: 4000,
               style: {
-                background: '#1e293b',
-                color: '#fff',
-                fontSize: '14px',
-                borderRadius: '8px',
-                padding: '12px 16px',
+                background: "#1e293b",
+                color: "#fff",
+                fontSize: "14px",
+                borderRadius: "8px",
+                padding: "12px 16px",
               },
               success: {
                 iconTheme: {
-                  primary: '#10b981',
-                  secondary: '#fff',
+                  primary: "#10b981",
+                  secondary: "#fff",
                 },
               },
               error: {
                 iconTheme: {
-                  primary: '#ef4444',
-                  secondary: '#fff',
+                  primary: "#ef4444",
+                  secondary: "#fff",
                 },
               },
             }}
