@@ -48,6 +48,7 @@ try {
 }
 
 const connectDB = require("./config/db");
+const User = require("./models/User");
 const { errorHandler, ApiError } = require("./middleware/errorHandler");
 
 // Route imports
@@ -55,6 +56,22 @@ const authRoutes = require("./routes/authRoutes");
 const doctorRoutes = require("./routes/doctorRoutes");
 const patientRoutes = require("./routes/patientRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
+
+const ensureDefaultAdminUser = async () => {
+  const adminEmail = "admin@doctor-tracker.com";
+  const existingAdmin = await User.findOne({ email: adminEmail.toLowerCase() });
+
+  if (!existingAdmin) {
+    await User.create({
+      name: "Admin",
+      email: adminEmail,
+      password: "password123",
+    });
+    console.log(`[Auth] Default admin user created: ${adminEmail}`);
+  } else {
+    console.log(`[Auth] Default admin user already exists: ${adminEmail}`);
+  }
+};
 
 const app = express();
 
@@ -145,6 +162,7 @@ let server;
 const startServer = async () => {
   try {
     await connectDB();
+    await ensureDefaultAdminUser();
     server = app.listen(PORT, () => {
       console.log(
         `[Server] Doctor Tracker backend running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`,

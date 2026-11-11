@@ -13,8 +13,7 @@ import {
 } from "@/types";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://doctor-tracker-oksb.onrender.com/api";
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

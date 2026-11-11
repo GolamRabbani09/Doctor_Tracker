@@ -52,8 +52,11 @@ export default function LoginPage() {
     } catch (err: unknown) {
       console.error('Login error:', err);
       const msg =
-        (err as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || 'Invalid email or password';
+        (err as { response?: { data?: { message?: string; error?: string } } })?.response
+          ?.data?.message ||
+        (err as { response?: { data?: { message?: string; error?: string } } })?.response
+          ?.data?.error ||
+        'Invalid email or password';
       toast.error(msg);
     } finally {
       setSubmitting(false);
