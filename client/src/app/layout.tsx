@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-// @ts-expect-error Next.js loads this stylesheet as a side effect.
+
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
