@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 import {
   User,
   Doctor,
@@ -10,15 +10,16 @@ import {
   PatientQueryParams,
   PatientsResponseData,
   DashboardStats,
-} from '@/types';
+} from "@/types";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://doctor-tracker-oksb.onrender.com/api";
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   timeout: 15000,
 });
@@ -26,38 +27,41 @@ export const apiClient = axios.create({
 // Attach Bearer token to all outgoing requests if token exists in localStorage
 apiClient.interceptors.request.use(
   (config) => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('doctor_tracker_token');
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("doctor_tracker_token");
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response interceptor to handle 401 Unauthorized
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (typeof window !== 'undefined' && error.response?.status === 401) {
+    if (typeof window !== "undefined" && error.response?.status === 401) {
       // Clear token if expired or invalid
       const currentPath = window.location.pathname;
-      if (currentPath !== '/login') {
-        localStorage.removeItem('doctor_tracker_token');
-        localStorage.removeItem('doctor_tracker_user');
-        window.location.href = '/login';
+      if (currentPath !== "/login") {
+        localStorage.removeItem("doctor_tracker_token");
+        localStorage.removeItem("doctor_tracker_user");
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // Auth Services
 export const authApi = {
-  login: async (email: string, password: string): Promise<{ token: string; user: User }> => {
-    const response = await apiClient.post('/auth/login', { email, password });
+  login: async (
+    email: string,
+    password: string,
+  ): Promise<{ token: string; user: User }> => {
+    const response = await apiClient.post("/auth/login", { email, password });
     const data = response.data;
     if (data.token && data.user) {
       return { token: data.token, user: data.user };
@@ -69,7 +73,7 @@ export const authApi = {
   },
 
   getMe: async (): Promise<User> => {
-    const response = await apiClient.get('/auth/me');
+    const response = await apiClient.get("/auth/me");
     const data = response.data;
     if (data.user) {
       return data.user;
@@ -89,8 +93,10 @@ export const authApi = {
 
 // Doctor Services
 export const doctorsApi = {
-  getDoctors: async (params?: DoctorQueryParams): Promise<DoctorsResponseData> => {
-    const response = await apiClient.get('/doctors', { params });
+  getDoctors: async (
+    params?: DoctorQueryParams,
+  ): Promise<DoctorsResponseData> => {
+    const response = await apiClient.get("/doctors", { params });
     const resData = response.data;
     // Backend standard: { success: true, data: { doctors: [], pagination: {} } }
     if (resData.data && resData.data.doctors) {
@@ -152,11 +158,14 @@ export const doctorsApi = {
   },
 
   createDoctor: async (data: DoctorFormData): Promise<Doctor> => {
-    const response = await apiClient.post('/doctors', data);
+    const response = await apiClient.post("/doctors", data);
     return response.data?.data?.doctor || response.data?.data || response.data;
   },
 
-  updateDoctor: async (id: string, data: Partial<DoctorFormData>): Promise<Doctor> => {
+  updateDoctor: async (
+    id: string,
+    data: Partial<DoctorFormData>,
+  ): Promise<Doctor> => {
     const response = await apiClient.put(`/doctors/${id}`, data);
     return response.data?.data?.doctor || response.data?.data || response.data;
   },
@@ -186,8 +195,10 @@ export const doctorsApi = {
 
 // Patient Services
 export const patientsApi = {
-  getPatients: async (params?: PatientQueryParams): Promise<PatientsResponseData> => {
-    const response = await apiClient.get('/patients', { params });
+  getPatients: async (
+    params?: PatientQueryParams,
+  ): Promise<PatientsResponseData> => {
+    const response = await apiClient.get("/patients", { params });
     const resData = response.data;
     // Backend standard: { success: true, data: { patients: [], pagination: {} } }
     if (resData.data && resData.data.patients) {
@@ -245,11 +256,14 @@ export const patientsApi = {
   },
 
   createPatient: async (data: PatientFormData): Promise<Patient> => {
-    const response = await apiClient.post('/patients', data);
+    const response = await apiClient.post("/patients", data);
     return response.data?.data?.patient || response.data?.data || response.data;
   },
 
-  updatePatient: async (id: string, data: Partial<PatientFormData>): Promise<Patient> => {
+  updatePatient: async (
+    id: string,
+    data: Partial<PatientFormData>,
+  ): Promise<Patient> => {
     const response = await apiClient.put(`/patients/${id}`, data);
     return response.data?.data?.patient || response.data?.data || response.data;
   },
@@ -262,7 +276,7 @@ export const patientsApi = {
 // Analytics Services
 export const analyticsApi = {
   getDashboardStats: async (): Promise<DashboardStats> => {
-    const response = await apiClient.get('/analytics/dashboard');
+    const response = await apiClient.get("/analytics/dashboard");
     const resData = response.data;
     if (resData.data) {
       return resData.data;
