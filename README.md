@@ -29,17 +29,17 @@
 
 ## 🛠️ Tech Stack
 
-| Layer              | Technology                                                       |
-| :----------------- | :--------------------------------------------------------------- |
-| **Frontend**       | Next.js 14 (App Router), React 18, TypeScript                   |
-| **Styling**        | Tailwind CSS 3.4, Custom Component Library (no external UI lib)  |
-| **Charts**         | Recharts (Bar, Pie/Donut, Area Charts)                           |
-| **Icons**          | Lucide React                                                     |
-| **State/Fetching** | React Hooks + Axios + Custom Debounce                            |
-| **Notifications**  | React Hot Toast                                                  |
-| **Backend**        | Node.js, Express.js                                              |
-| **Database**       | MongoDB + Mongoose ODM                                           |
-| **Authentication** | JSON Web Tokens (JWT) + bcryptjs                                 |
+| Layer              | Technology                                                         |
+| :----------------- | :----------------------------------------------------------------- |
+| **Frontend**       | Next.js 14 (App Router), React 18, TypeScript                      |
+| **Styling**        | Tailwind CSS 3.4, Custom Component Library (no external UI lib)    |
+| **Charts**         | Recharts (Bar, Pie/Donut, Area Charts)                             |
+| **Icons**          | Lucide React                                                       |
+| **State/Fetching** | React Hooks + Axios + Custom Debounce                              |
+| **Notifications**  | React Hot Toast                                                    |
+| **Backend**        | Node.js, Express.js                                                |
+| **Database**       | MongoDB + Mongoose ODM                                             |
+| **Authentication** | JSON Web Tokens (JWT) + bcryptjs                                   |
 | **Security**       | Rate Limiting, CORS, Input Sanitization, Centralized Error Handler |
 
 ---
@@ -103,12 +103,14 @@
 ## ✨ Features
 
 ### 🔐 Authentication & Security
+
 - JWT-based admin login with bcrypt password hashing
 - Protected API routes and client-side route guards
 - Rate limiting (100 requests per 15 minutes per IP)
 - Centralized error handling with meaningful error messages
 
 ### 📊 Admin Dashboard & Data Visualization
+
 - **4 KPI Metric Cards**: Total Doctors, Total Patients, Avg Patients/Doctor, New This Month
 - **Bar Chart**: Top 10 doctors by patient count (horizontal bars)
 - **Donut/Pie Chart**: Specialization distribution across doctors
@@ -116,6 +118,7 @@
 - All analytics powered by a **single MongoDB Aggregation Pipeline** using `$facet`
 
 ### 👨‍⚕️ Doctor Management
+
 - Full CRUD operations (Create, Read, Update, Delete)
 - Real-time debounced search (name, specialization, hospital)
 - Multi-criteria filtering (specialization, hospital, date range)
@@ -124,6 +127,7 @@
 - Cascade delete (removing a doctor also removes associated patients)
 
 ### 🏥 Patient Management
+
 - Dedicated patient management page
 - Search by name or medical condition
 - Filter by condition, attending doctor, and registration date
@@ -131,6 +135,7 @@
 - Server-side pagination
 
 ### 🎨 UI/UX Quality
+
 - Fully responsive (mobile, tablet, desktop)
 - Loading skeleton animations
 - Toast notifications for all operations
@@ -143,6 +148,7 @@
 ## 🚀 Setup Guide
 
 ### Prerequisites
+
 - **Node.js** >= 18.x
 - **MongoDB** (Local instance or [MongoDB Atlas](https://www.mongodb.com/atlas) free cluster)
 - **npm** >= 9.x
@@ -167,11 +173,12 @@ cp .env.example .env
 ```
 
 Edit `server/.env` with your values:
+
 ```env
 MONGODB_URI=mongodb://127.0.0.1:27017/doctor_tracker
 JWT_SECRET=your_super_secret_jwt_key_here_change_this
 JWT_EXPIRE=7d
-PORT=5000
+PORT=5001
 CLIENT_URL=http://localhost:3000
 ```
 
@@ -186,7 +193,7 @@ npm run seed
 npm run dev
 ```
 
-The backend will run on **http://localhost:5000**.
+The backend will run on **http://localhost:5001**.
 
 ### 3. Frontend Setup
 
@@ -201,8 +208,9 @@ cp .env.example .env.local
 ```
 
 Edit `client/.env.local`:
+
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_API_URL=http://localhost:5001/api
 ```
 
 ```bash
@@ -224,6 +232,7 @@ The frontend will run on **http://localhost:3000**.
 Run these commands to verify that both frontend and backend are completely functional without errors:
 
 ### 1. Backend Verification
+
 ```bash
 cd server
 
@@ -237,11 +246,12 @@ npm run seed
 npm run dev
 
 # D. Verify server health check (in another terminal)
-curl -X GET http://localhost:5000/api/health
+curl -X GET http://localhost:5001/api/health
 # Expected Output: {"success":true,"status":"ok","uptime":...}
 ```
 
 ### 2. Frontend Production Build & Lint Test
+
 ```bash
 cd client
 
@@ -260,21 +270,24 @@ npm run dev
 ### 3. Quick API Verification via cURL
 
 **Admin Login Test:**
+
 ```bash
-curl -X POST http://localhost:5000/api/auth/login \
+curl -X POST http://localhost:5001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@doctor-tracker.com","password":"password123"}'
 ```
 
 **Fetch Analytics Dashboard (using token from login):**
+
 ```bash
-curl -X GET http://localhost:5000/api/analytics/dashboard \
+curl -X GET http://localhost:5001/api/analytics/dashboard \
   -H "Authorization: Bearer <YOUR_JWT_TOKEN>"
 ```
 
 **Fetch Paginated & Filtered Doctors:**
+
 ```bash
-curl -X GET "http://localhost:5000/api/doctors?page=1&limit=5&specialization=Cardiology" \
+curl -X GET "http://localhost:5001/api/doctors?page=1&limit=5&specialization=Cardiology" \
   -H "Authorization: Bearer <YOUR_JWT_TOKEN>"
 ```
 
@@ -283,31 +296,35 @@ curl -X GET "http://localhost:5000/api/doctors?page=1&limit=5&specialization=Car
 ## 🔌 API Endpoints
 
 ### Authentication
+
 | Method | Endpoint        | Description           | Auth Required |
 | :----- | :-------------- | :-------------------- | :-----------: |
 | POST   | /api/auth/login | Admin login           |      No       |
 | GET    | /api/auth/me    | Get current user info |      Yes      |
 
 ### Doctors
-| Method | Endpoint                  | Description                    | Auth Required |
-| :----- | :------------------------ | :----------------------------- | :-----------: |
-| GET    | /api/doctors              | List doctors (search/filter/page) |    Yes     |
-| GET    | /api/doctors/:id          | Get single doctor              |      Yes      |
-| POST   | /api/doctors              | Create new doctor              |      Yes      |
-| PUT    | /api/doctors/:id          | Update doctor                  |      Yes      |
-| DELETE | /api/doctors/:id          | Delete doctor + cascade patients |    Yes      |
-| GET    | /api/doctors/:id/patients | Get doctor's patients          |      Yes      |
+
+| Method | Endpoint                  | Description                       | Auth Required |
+| :----- | :------------------------ | :-------------------------------- | :-----------: |
+| GET    | /api/doctors              | List doctors (search/filter/page) |      Yes      |
+| GET    | /api/doctors/:id          | Get single doctor                 |      Yes      |
+| POST   | /api/doctors              | Create new doctor                 |      Yes      |
+| PUT    | /api/doctors/:id          | Update doctor                     |      Yes      |
+| DELETE | /api/doctors/:id          | Delete doctor + cascade patients  |      Yes      |
+| GET    | /api/doctors/:id/patients | Get doctor's patients             |      Yes      |
 
 ### Patients
-| Method | Endpoint           | Description                        | Auth Required |
-| :----- | :----------------- | :--------------------------------- | :-----------: |
-| GET    | /api/patients      | List patients (search/filter/page) |      Yes      |
-| GET    | /api/patients/:id  | Get single patient                 |      Yes      |
-| POST   | /api/patients      | Create new patient                 |      Yes      |
-| PUT    | /api/patients/:id  | Update patient                     |      Yes      |
-| DELETE | /api/patients/:id  | Delete patient                     |      Yes      |
+
+| Method | Endpoint          | Description                        | Auth Required |
+| :----- | :---------------- | :--------------------------------- | :-----------: |
+| GET    | /api/patients     | List patients (search/filter/page) |      Yes      |
+| GET    | /api/patients/:id | Get single patient                 |      Yes      |
+| POST   | /api/patients     | Create new patient                 |      Yes      |
+| PUT    | /api/patients/:id | Update patient                     |      Yes      |
+| DELETE | /api/patients/:id | Delete patient                     |      Yes      |
 
 ### Analytics
+
 | Method | Endpoint                 | Description                     | Auth Required |
 | :----- | :----------------------- | :------------------------------ | :-----------: |
 | GET    | /api/analytics/dashboard | Aggregated dashboard statistics |      Yes      |
@@ -317,33 +334,37 @@ curl -X GET "http://localhost:5000/api/doctors?page=1&limit=5&specialization=Car
 ## 🗄️ Database Schema & Indexing
 
 ### Doctor Schema
-| Field          | Type   | Constraints                    |
-| :------------- | :----- | :----------------------------- |
-| name           | String | Required, trimmed              |
-| specialization | String | Required, trimmed              |
-| hospital       | String | Required, trimmed              |
-| phone          | String | Required                       |
-| email          | String | Required, unique, lowercase    |
-| createdAt      | Date   | Default: Date.now              |
+
+| Field          | Type   | Constraints                 |
+| :------------- | :----- | :-------------------------- |
+| name           | String | Required, trimmed           |
+| specialization | String | Required, trimmed           |
+| hospital       | String | Required, trimmed           |
+| phone          | String | Required                    |
+| email          | String | Required, unique, lowercase |
+| createdAt      | Date   | Default: Date.now           |
 
 **Indexes:**
+
 - `{ name: 'text', specialization: 'text', hospital: 'text' }` — Full-text search
 - `{ specialization: 1, hospital: 1 }` — Compound filter index
 - `{ createdAt: -1 }` — Date range queries
 
 ### Patient Schema
-| Field     | Type     | Constraints                          |
-| :-------- | :------- | :----------------------------------- |
-| name      | String   | Required, trimmed                    |
-| age       | Number   | Required                             |
-| gender    | String   | Enum: Male, Female, Other            |
-| phone     | String   | Required                             |
-| email     | String   | Optional, lowercase                  |
-| condition | String   | Required, trimmed                    |
-| doctorId  | ObjectId | Required, ref: Doctor                |
-| createdAt | Date     | Default: Date.now                    |
+
+| Field     | Type     | Constraints               |
+| :-------- | :------- | :------------------------ |
+| name      | String   | Required, trimmed         |
+| age       | Number   | Required                  |
+| gender    | String   | Enum: Male, Female, Other |
+| phone     | String   | Required                  |
+| email     | String   | Optional, lowercase       |
+| condition | String   | Required, trimmed         |
+| doctorId  | ObjectId | Required, ref: Doctor     |
+| createdAt | Date     | Default: Date.now         |
 
 **Indexes:**
+
 - `{ name: 'text', condition: 'text' }` — Full-text search
 - `{ doctorId: 1 }` — Doctor-patient lookup
 - `{ condition: 1, doctorId: 1 }` — Compound filter
@@ -405,32 +426,34 @@ This approach demonstrates deep frontend competency while keeping the applicatio
 ## 📸 Visual Evidence
 
 ### 1. Desktop Experience (Wide Viewport)
-| View | Description | Screenshot Preview |
-| :--- | :--- | :---: |
-| **Admin Login** | Secure medical administrative login portal | `screenshots/desktop-login.png` |
+
+| View                    | Description                                                                                      |         Screenshot Preview          |
+| :---------------------- | :----------------------------------------------------------------------------------------------- | :---------------------------------: |
+| **Admin Login**         | Secure medical administrative login portal                                                       |   `screenshots/desktop-login.png`   |
 | **Analytics Dashboard** | 4 KPI cards, Recharts horizontal bar chart, specialization donut, 12-month dual area trend chart | `screenshots/desktop-dashboard.png` |
-| **Doctor Management** | Multi-criteria filter, debounced search, responsive table, and assigned patients drawer | `screenshots/desktop-doctors.png` |
-| **Patient Management** | Condition filters, doctor assignment, pagination, and edit/delete modals | `screenshots/desktop-patients.png` |
+| **Doctor Management**   | Multi-criteria filter, debounced search, responsive table, and assigned patients drawer          |  `screenshots/desktop-doctors.png`  |
+| **Patient Management**  | Condition filters, doctor assignment, pagination, and edit/delete modals                         | `screenshots/desktop-patients.png`  |
 
 ### 2. Mobile Experience (Adaptive Viewport)
-| View | Description | Screenshot Preview |
-| :--- | :--- | :---: |
-| **Mobile Drawer Navigation** | Slide-out overlay navigation with active indicator | `screenshots/mobile-menu.png` |
-| **Mobile Analytics & KPIs** | Stacked responsive stat cards & touch-friendly charts | `screenshots/mobile-dashboard.png` |
-| **Mobile Doctor List** | Responsive horizontal scrolling & touch-friendly action buttons | `screenshots/mobile-doctors.png` |
+
+| View                         | Description                                                     |         Screenshot Preview         |
+| :--------------------------- | :-------------------------------------------------------------- | :--------------------------------: |
+| **Mobile Drawer Navigation** | Slide-out overlay navigation with active indicator              |   `screenshots/mobile-menu.png`    |
+| **Mobile Analytics & KPIs**  | Stacked responsive stat cards & touch-friendly charts           | `screenshots/mobile-dashboard.png` |
+| **Mobile Doctor List**       | Responsive horizontal scrolling & touch-friendly action buttons |  `screenshots/mobile-doctors.png`  |
 
 ---
 
 ## 📬 Submission Links & Credentials
 
-| Field | Submission Details |
-| :--- | :--- |
+| Field                          | Submission Details                                         |
+| :----------------------------- | :--------------------------------------------------------- |
 | **Frontend GitHub Repository** | `https://github.com/<your-username>/doctor-tracker-client` |
-| **Backend GitHub Repository** | `https://github.com/<your-username>/doctor-tracker-server` |
-| **Live Frontend URL** | `https://doctor-tracker-frontend.vercel.app` |
-| **Live Backend API URL** | `https://doctor-tracker-api.onrender.com` |
-| **Admin Demo Email** | `admin@doctor-tracker.com` |
-| **Admin Demo Password** | `password123` |
+| **Backend GitHub Repository**  | `https://github.com/<your-username>/doctor-tracker-server` |
+| **Live Frontend URL**          | `https://doctor-tracker-frontend.vercel.app`               |
+| **Live Backend API URL**       | `https://doctor-tracker-api.onrender.com`                  |
+| **Admin Demo Email**           | `admin@doctor-tracker.com`                                 |
+| **Admin Demo Password**        | `password123`                                              |
 
 ---
 
